@@ -220,11 +220,17 @@ static struct xtables_match ipaddr_mt_reg = {
 	.family        = PF_INET,
 	.size          = XT_ALIGN(sizeof(struct xt_ipaddr_mtinfo)),
 	.userspacesize = XT_ALIGN(sizeof(struct xt_ipaddr_mtinfo)),
+	/* called when user execs "iptables -m ipaddr -h" */
 	.help          = ipaddr_mt_help,
+	/* populates the xt_ipaddr_mtinfo before parse (eg. to set defaults). */
 	.init          = ipaddr_mt_init,
+	/* called when user enters new rule; it validates the args (--ipsrc). */
 	.parse         = ipaddr_mt4_parse,
+	/* last chance for sanity checks after parse. */
 	.final_check   = ipaddr_mt_check,
+	/* called when user execs "iptables -L" */
 	.print         = ipaddr_mt4_print,
+	/* called when user execs "iptables-save" */
 	.save          = ipaddr_mt4_save,
 	.extra_opts    = ipaddr_mt_opts,
 };

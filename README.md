@@ -32,7 +32,7 @@ Then whenever you want to compile and install,
 
 	$ cd mod
 	$ make # this generates the binary xt_ipaddr.ko.
-	# make install
+	# make modules_install
 
 To activate it, you can modprobe it like any other module:
 
