@@ -24,15 +24,13 @@ The `mod` folder contains the sample module. The `usr` folder contains the sampl
 
 ### Module
 
-Do this the first time:
-
 	# apt-get install linux-headers-$(uname -r)
-
-Then whenever you want to compile and install,
-
 	$ cd mod
 	$ make # this generates the binary xt_ipaddr.ko.
 	# make modules_install
+	# depmod
+
+After the first time, you can omit the `apt-get` and the `depmod`.
 
 To activate it, you can modprobe it like any other module:
 
