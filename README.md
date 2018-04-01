@@ -44,7 +44,7 @@ Except, you don't actually need to do it, since `iptables` automatically modprob
 
 First time only:
 
-	# apt-get install iptables-dev
+	# apt-get install iptables-dev pkg-config
 
 Compile and install:
 
