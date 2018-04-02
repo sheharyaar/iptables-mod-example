@@ -6,10 +6,36 @@
 #include <linux/ip.h>
 #include <linux/ipv6.h>
 #include <linux/module.h>
+#include <linux/version.h>
 #include <linux/netfilter.h>
 #include <linux/netfilter/x_tables.h>
 #include <net/ipv6.h>
 #include "xt_ipaddr.h"
+
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0)
+
+/*
+ * Until kernel 4.9, the incoming and outgoing devices were par->in and
+ * par->out.
+ * Starting from kernel 4.10, the devices are par->state->in and
+ * par->state->out. However, xt_in() and xt_out() are provided as a future-proof
+ * means to access them.
+ *
+ * So we'll define the equivalent of these functions for older kernels so we
+ * can use an unified API.
+ */
+
+static inline const struct net_device *xt_in(const struct xt_action_param *par)
+{
+	return par->in;
+}
+
+static inline const struct net_device *xt_out(const struct xt_action_param *par)
+{
+	return par->out;
+}
+
+#endif
 
 static bool ipaddr_mt4(const struct sk_buff *skb, struct xt_action_param *par)
 {
@@ -18,8 +44,8 @@ static bool ipaddr_mt4(const struct sk_buff *skb, struct xt_action_param *par)
 
 	printk(KERN_INFO
 			"xt_ipaddr: IN=%s OUT=%s SRC=%pI4 DST=%pI4 IPSRC=%pI4 IPDST=%pI4\n",
-			(par->in != NULL) ? par->in->name : "",
-			(par->out != NULL) ? par->out->name : "",
+			(xt_in(par) != NULL) ? xt_in(par)->name : "",
+			(xt_out(par) != NULL) ? xt_out(par)->name : "",
 			&iph->saddr, &iph->daddr, &info->src, &info->dst);
 
 	if (info->flags & XT_IPADDR_SRC) {
@@ -48,8 +74,8 @@ static bool ipaddr_mt6(const struct sk_buff *skb, struct xt_action_param *par)
 
 	printk(KERN_INFO
 			"xt_ipaddr: IN=%s OUT=%s SRC=%pI6c DST=%pI6c IPSRC=%pI6c IPDST=%pI6c\n",
-			(par->in != NULL) ? par->in->name : "",
-			(par->out != NULL) ? par->out->name : "",
+			(xt_in(par) != NULL) ? xt_in(par)->name : "",
+			(xt_out(par) != NULL) ? xt_out(par)->name : "",
 			&iph->saddr, &iph->daddr, &info->src.in6, &info->dst.in6);
 
 	if (info->flags & XT_IPADDR_SRC) {

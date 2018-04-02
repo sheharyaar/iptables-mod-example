@@ -27,3 +27,23 @@
 *.i*86
 *.x86_64
 *.hex
+
+# Eclipse files
+.cproject
+.project
+.settings
+.metadata
+
+# Backups
+*~
+
+# Kernel module stuff
+*.ko
+*.mod.c
+*.ko.cmd
+*.o.cmd
+*.order
+*.symvers
+.tmp_versions
+.cache.mk
+
