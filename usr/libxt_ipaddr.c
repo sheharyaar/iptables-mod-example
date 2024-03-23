@@ -251,7 +251,11 @@ static struct xtables_match ipaddr_mt6_reg = {
 	.extra_opts    = ipaddr_mt_opts,
 };
 
-static void _init(void)
+/*
+	Use of _init and _fini is deprecated.
+	See : http://www.faqs.org/docs/Linux-HOWTO/Program-Library-HOWTO.html#INIT-AND-CLEANUP
+*/
+static void __attribute__((constructor)) _init(void)
 {
 	xtables_register_match(&ipaddr_mt_reg);
 	xtables_register_match(&ipaddr_mt6_reg);
